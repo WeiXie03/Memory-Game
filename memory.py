@@ -12,6 +12,7 @@ selec = 0
 def clicked(widg, pos):
 	global imgs
 	global selec
+	global chosen
 	if Fl.event_button() == FL_LEFT_MOUSE:
 		if selec <= 1:
 			widg.image(imgs[pos].copy(sqside,sqside))
@@ -19,10 +20,8 @@ def clicked(widg, pos):
 			selec += 1
 		elif selec == 2:
 #			print selec
-			#TODO: compare actual image files, not instances of Fl_JPEG_Image
-			print (imgs[grid.index(chosen[0])]).data
-			print (imgs[grid.index(chosen[1])]).data
-			if (imgs[grid.index(chosen[0])]).data == (imgs[grid.index(chosen[1])]).data:
+			print (imgs[grid.index(chosen[0])]).data(), (imgs[grid.index(chosen[1])]).data()
+			if (imgs[grid.index(chosen[0])]).data() == (imgs[grid.index(chosen[1])]).data():
 				for sq in chosen:
 					sq.deactivate()
 
