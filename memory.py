@@ -1,7 +1,6 @@
 from fltk import *
 import random
 import glob
-from time import sleep
 
 sqside = 200
 win = Fl_Window(Fl_w()/2-2*sqside,Fl_h()/2-(4*sqside+40),4*sqside,5*sqside)
@@ -9,6 +8,7 @@ grid = []
 imgs = []
 chosen = []
 imgfiles = {}
+state = 0
 
 def clicked(widg):
     global chosen
@@ -29,20 +29,32 @@ def clicked(widg):
 def reshift(widg):
     global imgs
     global chosen
+    global state
+    global grid
     for sq in chosen:
         sq.image(imgs[grid.index(sq)].copy(sqside,sqside))
         sq.redraw()
 #    print imgfiles[(imgs[grid.index(chosen[0])])], imgfiles[(imgs[grid.index(chosen[1])])]
 #    print imgfiles[(imgs[grid.index(chosen[0])])]==imgfiles[(imgs[grid.index(chosen[1])])]
-    sleep(2)
-    if imgfiles[(imgs[grid.index(chosen[0])])] == imgfiles[(imgs[grid.index(chosen[1])])]:
+    if imgfiles[(imgs[grid.index(chosen[1])])] == imgfiles[(imgs[grid.index(chosen[0])])]:
+        print chosen[0], chosen[1]
         for sq in chosen:
+            print sq
             sq.deactivate()
+        chosen = []
     else:
-        for sqb in grid:
-            sqb.deactivate()
-            if sqb in chosen:
-                sqb.image(None)
+        if state == 1:
+            for sq in grid:
+                if sq in chosen:
+                    sq.image(None)
+                    sq.color(FL_GRAY)
+                    chosen.remove(sq)
+                sq.activate()
+            state = 0
+        elif state == 0:
+            for sqb in grid:
+                sqb.deactivate()
+            state = 1
 
 for file in glob.glob("./imgs/*"):
     for rep in range(2):
@@ -51,7 +63,7 @@ for file in glob.glob("./imgs/*"):
         imgfiles[img] = file
 print imgfiles
 
-#random.shuffle(imgs)
+random.shuffle(imgs)
 
 win.begin()
 for row in range(4):
